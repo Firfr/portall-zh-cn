@@ -1,0 +1,425 @@
+{% extends "base.html" %} {% block content %}
+<h1>已注册端口</h1>
+<div id="notification-area"></div>
+{% for ip, data in ports_by_ip.items() %}
+<div class="network-switch" draggable="true" data-ip="{{ ip }}">
+  <h2 class="switch-label">
+    {{ ip }}{% if data.nickname %} ({{ data.nickname }}){% endif %}
+    <div class="sort-buttons">
+      <button
+        class="sort-btn"
+        data-sort="port"
+        data-ip="{{ ip }}"
+        title="按端口号排序"
+      >
+        <i class="fas fa-hashtag"></i
+        ><i class="fas fa-sort" style="display: none"></i>
+      </button>
+      <button
+        class="sort-btn"
+        data-sort="protocol"
+        data-ip="{{ ip }}"
+        title="按协议排序"
+      >
+        <i class="fas fa-network-wired"></i
+        ><i class="fas fa-sort" style="display: none"></i>
+      </button>
+    </div>
+    <a
+      href="#"
+      class="edit-ip"
+      data-ip="{{ ip }}"
+      data-nickname="{{ data.nickname or '' }}"
+    >
+      <i class="fas fa-pencil-alt"></i>
+    </a>
+  </h2>
+  <div class="switch-panel" data-ip="{{ ip }}">
+    {% for port in data.ports %}
+    <div
+      class="port-slot"
+      draggable="true"
+      data-port="{{ port.port_number }}"
+      data-order="{{ port.order }}"
+    >
+      <div
+        class="port {% if port.port_number in data.ports|map(attribute='port_number') %}active{% endif %}"
+        data-ip="{{ ip }}"
+        data-port="{{ port.port_number }}"
+        data-description="{{ port.description }}"
+        data-order="{{ port.order }}"
+        data-id="{{ port.id }}"
+        data-protocol="{{ port.port_protocol }}"
+      >
+        <span class="port-number">{{ port.port_number }}</span>
+        <span class="port-description">{{ port.description }}</span>
+        <div class="port-tooltip">{{ port.description }}</div>
+      </div>
+      <p class="port-protocol">{{ port.port_protocol }}</p>
+    </div>
+    {% endfor %}
+    <div class="port-slot add-port-slot">
+      <div class="add-port" data-ip="{{ ip }}">
+        <span class="add-port-icon">+</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<!-- 编辑 IP 模态框 -->
+<div
+  class="modal fade"
+  id="editIpModal"
+  tabindex="-1"
+  aria-labelledby="editIpModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editIpModalLabel">编辑 IP 地址</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-ip-form">
+          <input type="hidden" id="old-ip" name="old_ip" />
+          <div class="mb-3">
+            <label for="new-ip" class="form-label">IP 地址</label>
+            <input
+              type="text"
+              class="form-control"
+              id="new-ip"
+              name="new_ip"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="new-nickname" class="form-label">名称（可选）</label>
+            <input
+              type="text"
+              class="form-control"
+              id="new-nickname"
+              name="new_nickname"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-ip">
+          删除 IP
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button type="button" class="btn btn-primary" id="save-ip">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑端口模态框 -->
+<div
+  class="modal fade"
+  id="editPortModal"
+  tabindex="-1"
+  aria-labelledby="editPortModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPortModalLabel">
+          编辑 IP 地址的端口： <span id="display-edit-port-ip"></span>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-port-form">
+          <input type="hidden" id="edit-port-ip" name="ip" />
+          <input type="hidden" id="old-port-number" name="old_port_number" />
+          <input type="hidden" id="port-id" name="port_id" />
+          <div class="mb-3">
+            <label for="new-port-number" class="form-label">端口号</label>
+            <input
+              type="number"
+              class="form-control"
+              id="new-port-number"
+              name="new_port_number"
+              required
+            />
+            <small
+              id="edit-port-exists-disclaimer"
+              class="text-danger"
+              style="display: none"
+            ></small>
+          </div>
+          <div class="mb-3">
+            <label for="port-description" class="form-label">描述</label>
+            <input
+              type="text"
+              class="form-control"
+              id="port-description"
+              name="description"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <select id="port-protocol" name="protocol" class="modern-select">
+              <option value="TCP">TCP</option>
+              <option value="UDP">UDP</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-port">
+          删除
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button type="button" class="btn btn-primary" id="save-port">
+          保存
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 添加端口模态框 -->
+<div
+  class="modal fade"
+  id="addPortModal"
+  tabindex="-1"
+  aria-labelledby="addPortModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPortModalLabel">
+          为 IP 添加端口： <span id="display-add-port-ip"></span>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="add-port-form">
+          <input type="hidden" id="add-port-ip" name="ip" />
+          <input type="hidden" id="add-port-ip-nickname" name="ip_nickname" />
+          <div class="mb-3">
+            <label for="add-new-port-number" class="form-label">端口号</label>
+            <input
+              type="number"
+              class="form-control"
+              id="add-new-port-number"
+              name="port_number"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="add-port-description" class="form-label">描述</label>
+            <input
+              type="text"
+              class="form-control"
+              id="add-port-description"
+              name="description"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <select
+              id="add-port-protocol"
+              name="protocol"
+              class="modern-select"
+            >
+              <option value="TCP">TCP</option>
+              <option value="UDP">UDP</option>
+            </select>
+          </div>
+          <div
+            id="port-exists-disclaimer"
+            class="text-danger mt-2"
+            style="display: none"
+          ></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="save-new-port"
+          disabled
+        >
+          添加端口
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 删除端口确认模态框 -->
+<div
+  class="modal fade"
+  id="deletePortModal"
+  tabindex="-1"
+  aria-labelledby="deletePortModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deletePortModalLabel">确认删除</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">你确定要删除此端口吗？</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-port">
+          删除
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 删除 IP 确认模态框 -->
+<div
+  class="modal fade"
+  id="deleteIpModal"
+  tabindex="-1"
+  aria-labelledby="deleteIpModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteIpModalLabel">确认删除 IP</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        你确定要删除 IP
+        <span id="delete-ip-address"></span> 及其所有分配的端口吗？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-ip">
+          删除
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 端口冲突解决模态框 -->
+<div
+  class="modal fade"
+  id="portConflictModal"
+  tabindex="-1"
+  aria-labelledby="portConflictModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="portConflictModalLabel">端口冲突</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>端口 <span id="conflictingPortNumber"></span> 已被此 IP 占用。</p>
+        <p>您可以更改迁移端口的端口号，或者更改已存在的端口号。</p>
+        <p>您想怎么做？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelPortConflict">
+          取消
+        </button>
+        <button type="button" class="btn btn-primary" id="changeMigratingPort">
+          更改迁移端口
+        </button>
+        <button type="button" class="btn btn-primary" id="changeExistingPort">
+          更改现有端口
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 端口号更改模态框 -->
+<div
+  class="modal fade"
+  id="portChangeModal"
+  tabindex="-1"
+  aria-labelledby="portChangeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="portChangeModalLabel">更改端口号</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>为 <span id="portChangeType"></span> 端口输入一个新的端口号：</p>
+        <input type="number" class="form-control" id="newPortNumber" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          取消
+        </button>
+        <button type="button" class="btn btn-primary" id="confirmPortChange">
+          确认
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/main.js') }}"
+></script>
+{% endblock %}
