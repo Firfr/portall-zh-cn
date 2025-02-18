@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <title>端口管理</title>
-  <link href="./static/bootstrap.min.css" rel="stylesheet" />
-  <link href="./static/all.min.css" rel="stylesheet" />
-  <link href="./static/animate.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./static/codemirror.min.css" />
-  <link rel="stylesheet" href="./static/monokai.min.css" />
+  <link href="/static/local/bootstrap.min.css" rel="stylesheet" />
+  <link href="/static/local/all.min.css" rel="stylesheet" />
+  <link href="/static/local/animate.min.css" rel="stylesheet" />
+  <link href="/static/local/codemirror.min.css" rel="stylesheet" />
+  <link href="/static/local/monokai.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/' + theme + '.css') }}" />
   <style id="custom-style"></style>
 </head>
@@ -42,13 +42,13 @@
     </div>
   </nav>
   <div class="container mt-5">{% block content %}{% endblock %}</div>
-  <script src="static/static/jquery-3.6.0.min.js"></script>
-  <script src="static/static/bootstrap.bundle.min.js"></script>
+  <script src="/static/local/jquery-3.6.0.min.js"></script>
+  <script src="/static/local/bootstrap.bundle.min.js"></script>
+  <script src="/static/local/codemirror.min.js"></script>
+  <script src="/static/local/css.min.js"></script>
+  <script src="/static/local/closebrackets.min.js"></script>
+  <script src="/static/local/matchbrackets.min.js"></script>
   <script type="module" src="{{ url_for('static', filename='js/ui/animations.js') }}"></script>
-  <script src="static/static/codemirror.min.js"></script>
-  <script src="static/static/css.min.js"></script>
-  <script src="static/static/closebrackets.min.js"></script>
-  <script src="static/static/matchbrackets.min.js"></script>
   {% block scripts %}{% endblock %}
 </body>
 
