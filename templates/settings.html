@@ -3,34 +3,34 @@
 <h1>设置</h1>
 <div id="notification-area" class="mb-3"></div>
 
-<!-- 标签页 -->
+<!-- Tabs -->
 <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
 
-    <!-- 常规 -->
+    <!-- General -->
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button"
             role="tab" aria-controls="general" aria-selected="true">常规</button>
     </li>
 
-    <!-- 端口 -->
+    <!-- Ports -->
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="ports-tab" data-bs-toggle="tab" data-bs-target="#ports" type="button" role="tab"
             aria-controls="ports" aria-selected="false">端口</button>
     </li>
 
-    <!-- 外观 -->
+    <!-- Appearance -->
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#appearance" type="button"
             role="tab" aria-controls="appearance" aria-selected="false">外观</button>
     </li>
 
-    <!-- 数据管理 -->
+    <!-- Data Management -->
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="data-tab" data-bs-toggle="tab" data-bs-target="#data" type="button" role="tab"
             aria-controls="data" aria-selected="false">数据管理</button>
     </li>
 
-    <!-- 关于 -->
+    <!-- About -->
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab"
             aria-controls="about" aria-selected="false">关于</button>
@@ -38,10 +38,10 @@
 
 </ul>
 
-<!-- 页面 -->
+<!-- Pages -->
 <div class="tab-content" id="settingsTabContent">
 
-    <!-- 常规设置 -->
+    <!-- General Settings -->
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <h2>常规设置</h2>
         <form id="settings-form">
@@ -57,30 +57,30 @@
         </form>
     </div>
 
-    <!-- 端口设置 -->
+    <!-- Port Settings -->
     <div class="tab-pane fade" id="ports" role="tabpanel" aria-labelledby="ports-tab">
         <h2>端口生成设置</h2>
         <form id="port-settings-form">
 
-            <!-- 端口开始 -->
+            <!-- Port Start -->
             <div class="mb-3">
                 <label for="port-start" class="form-label">端口号（开始）</label>
                 <input type="number" class="form-control" id="port-start" name="port_start" min="1024" max="65535">
             </div>
 
-            <!-- 端口结束 -->
+            <!-- Port End -->
             <div class="mb-3">
                 <label for="port-end" class="form-label">端口号（结束）</label>
                 <input type="number" class="form-control" id="port-end" name="port_end" min="1024" max="65535">
             </div>
 
-            <!-- 排除端口 -->
+            <!-- Exclude Ports -->
             <div class="mb-3">
                 <label for="port-exclude" class="form-label">排除端口号（逗号分隔）</label>
                 <input type="text" class="form-control" id="port-exclude" name="port_exclude">
             </div>
 
-            <!-- 端口长度 -->
+            <!-- Port Length -->
             <div class="mb-3">
                 <label class="form-label">端口号长度</label>
                 <div id="port-length-controls">
@@ -99,11 +99,11 @@
                     </div>
                 </div>
                 <small id="port-length-help" class="form-text text-muted" style="display: none;">
-                    <i class="fas fa-info-circle"></i> 端口长度由提供的开始/结束值决定。
+                    <i class="fas fa-info-circle"></i> 端口长度由提供的开始/结束值决定。.
                 </small>
             </div>
 
-            <!-- 复制到剪贴板 -->
+            <!-- Copy to Clipboard -->
             <div class="mb-3">
                 <label class="form-label">复制到剪贴板格式</label>
                 <div id="copy-format-controls">
@@ -111,7 +111,7 @@
                         <input class="form-check-input" type="radio" name="copy_format" id="copy-format-full"
                             value="full_url">
                         <label class="form-check-label" for="copy-format-full">
-                            完整 URL
+                            完整地址
                         </label>
                     </div>
                     <div class="form-check">
@@ -124,7 +124,7 @@
                 </div>
             </div>
 
-            <!-- 保存和清除按钮 -->
+            <!-- Save and Clear Buttons -->
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">保存端口设置</button>
                 <button type="button" id="clear-port-settings" class="btn btn-secondary">清除值</button>
@@ -134,7 +134,7 @@
         </form>
     </div>
 
-    <!-- 外观设置 -->
+    <!-- Appearance Settings -->
     <div class="tab-pane fade" id="appearance" role="tabpanel" aria-labelledby="appearance-tab">
         <h2>外观</h2>
         <form id="theme-form">
@@ -143,7 +143,7 @@
                 <select class="form-select" id="theme" name="theme">
                     {% for theme_name in themes %}
                     <option value="{{ theme_name }}" {% if theme_name==current_theme %}selected{% endif %}>
-                        {{ theme_name.replace('_', ' ').title() }}
+                          {{ "浅色" if theme_name == "light" else "深色" if theme_name == "dark" else theme_name.replace('_', ' ').title() }}
                     </option>
                     {% endfor %}
                 </select>
@@ -157,18 +157,18 @@
         </form>
     </div>
 
-    <!-- 数据管理 -->
+    <!-- Data Management -->
     <div class="tab-pane fade" id="data" role="tabpanel" aria-labelledby="data-tab">
         <h2>数据管理</h2>
 
-        <!-- 导出数据部分 -->
+        <!-- Export Data Section -->
         <div class="mb-4">
             <h3>导出数据</h3>
             <p>将所有端口条目导出到文件。</p>
             <button id="export-entries-button" class="btn btn-primary">导出条目</button>
         </div>
 
-        <!-- 清除数据部分 -->
+        <!-- Purge Data Section -->
         <div>
             <h3>清除数据</h3>
             <p>从数据库中清除所有条目。此操作无法撤销。</p>
@@ -176,7 +176,7 @@
         </div>
     </div>
 
-    <!-- 关于 -->
+    <!-- About -->
     <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
         <h2 class="section-title mb-4">关于 Portall</h2>
 
@@ -184,13 +184,13 @@
             <div class="card-content">
                 <h3 class="card-title">版本信息</h3>
                 <ul class="list-unstyled">
-                    <li><span class="info-label">版本：</span> {{ version }}</li>
-                    <li><span class="info-label">发布日期：</span> 2024 年 7 月 14 日</li>
-                    <li><span class="info-label">汉化日期：</span> 2024 年 12 月 16 日</li>
-                    <li><span class="info-label">Github:</span> <a href="https://github.com/Firfr/portall-zh-cn"
-                            target="_blank">Portall汉化仓库</a></li>
+                    <li><span class="info-label">版本:</span> {{ version }}</li>
+                    <li><span class="info-label">发布日期:</span> 2024 年 7 月 14 日</li>
+                    <li><span class="info-label">汉化日期：</span> 2025 年 6 月 12 日</li>
                     <li><span class="info-label">Github:</span> <a href="https://github.com/need4swede/Portall"
                             target="_blank">Portall 仓库</a></li>
+                    <li><span class="info-label">Github:</span> <a href="https://github.com/Firfr/portall-zh-cn"
+                            target="_blank">Portall汉化仓库</a></li>
                 </ul>
             </div>
         </div>
@@ -212,7 +212,7 @@
 
 </div>
 
-<!-- 确认模态框 -->
+<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

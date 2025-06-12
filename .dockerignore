@@ -1,0 +1,12 @@
+.git
+.DS
+__pycache__
+demo
+
+instance/
+
+# 我添加的
+图片/
+翻译说明.md
+修改说明.md
+本地调试命令记录.md

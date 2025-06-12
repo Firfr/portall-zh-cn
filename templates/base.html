@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <title>Portall 端口管理</title>
+    <link href="static/remote_files/bootstrap.min.css" rel="stylesheet">
+    <link href="static/remote_files/all.min.css" rel="stylesheet">
+    <link href="static/remote_files/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/remote_files/codemirror.min.css">
+    <link rel="stylesheet" href="static/remote_files/monokai.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/' + theme + '.css') }}">
+    <style id="custom-style"></style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand animate__animated" href="/">🚢 Portall 端口管理</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link animate__animated" href="/">新建</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animate__animated" href="/ports">端口</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animate__animated" href="/import">导入</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animate__animated" href="/settings">设置</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="static/remote_files/jquery-3.6.0.min.js"></script>
+    <script src="static/remote_files/bootstrap.bundle.min.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/ui/animations.js') }}"></script>
+    <script src="static/remote_files/codemirror.min.js"></script>
+    <script src="static/remote_files/css.min.js"></script>
+    <script src="static/remote_files/closebrackets.min.js"></script>
+    <script src="static/remote_files/matchbrackets.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -46,7 +46,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="new-nickname" class="form-label">名称（可选）</label>
-                    <input type="text" class="form-control" id="new-nickname" placeholder="Enter nickname">
+                    <input type="text" class="form-control" id="new-nickname" placeholder="输入名称">
                 </div>
             </div>
             <div class="modal-footer">
@@ -60,4 +60,34 @@
 
 {% block scripts %}
 <script type="module" src="{{ url_for('static', filename='js/core/new.js') }}"></script>
+<script>
+function copyToClipboard_firfe(text) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+            .then(() => alert("已复制到剪贴板！"))
+            .catch(err => {
+                console.error("复制失败:", err);
+                fallbackCopyText(text);
+            });
+    } else {
+        fallbackCopyText(text);
+    }
+}
+
+function fallbackCopyText(text) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.top = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand("copy");
+        alert("已复制到剪贴板！");
+    } catch (err) {
+        alert("复制失败，请手动复制。");
+    }
+    document.body.removeChild(textarea);
+}
+</script>
 {% endblock %}
