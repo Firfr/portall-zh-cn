@@ -274,7 +274,7 @@ function checkPortConflict() {
     if (portExists) {
         const existingPortDescription = $(`.port[data-ip="${ip}"][data-port="${portNumber}"][data-protocol="${protocol}"]:not([data-id="${currentPortId}"])`).data('description');
         console.log('Existing port description:', existingPortDescription);
-        $('#edit-port-exists-disclaimer').text(`Port ${portNumber} is already assigned to ${existingPortDescription}`).show();
+        $('#edit-port-exists-disclaimer').text(`端口 ${portNumber} 已被分配给 ${existingPortDescription}`).show();
         $('#save-port').prop('disabled', true);
     } else {
         $('#edit-port-exists-disclaimer').hide();
@@ -318,7 +318,7 @@ function handlePortNumberInput(isEdit) {
 
         if (portExists) {
             const description = $(`.port[data-ip="${ip}"][data-port="${portNumber}"]`).data('description');
-            $(disclaimerSelector).text(`Port ${portNumber} already assigned to ${description}`).show();
+            $(disclaimerSelector).text(`端口 ${portNumber} 已被分配给 ${description}`).show();
             $(saveButtonSelector).prop('disabled', true);
         } else {
             $(disclaimerSelector).hide();
@@ -575,7 +575,7 @@ function handleAddNewPortNumberInput() {
 
     if (portExists) {
         const description = $(`.port[data-ip="${ip}"][data-port="${portNumber}"][data-protocol="${protocol}"]`).data('description');
-        $('#port-exists-disclaimer').text(`Port ${portNumber} (${protocol}) already assigned to ${description}`).show();
+        $('#port-exists-disclaimer').text(`端口 ${portNumber} (${protocol}) 已被分配给 ${description}`).show();
         $('#save-new-port').prop('disabled', true);
     } else {
         $('#port-exists-disclaimer').hide();

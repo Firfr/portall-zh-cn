@@ -402,7 +402,7 @@ $('#cancelPortConflict').click(function () {
  */
 $('#changeMigratingPort, #changeExistingPort').click(function () {
     const isChangingMigrating = $(this).attr('id') === 'changeMigratingPort';
-    $('#portChangeType').text(isChangingMigrating ? 'migrating' : 'existing');
+    $('#portChangeType').text(isChangingMigrating ? '迁移中' : '已存在');
     $('#portConflictModal').modal('hide');
     $('#portChangeModal').modal('show');
 });
@@ -415,7 +415,7 @@ $('#changeMigratingPort, #changeExistingPort').click(function () {
  */
 $('#confirmPortChange').click(function () {
     const newPortNumber = $('#newPortNumber').val();
-    const isChangingMigrating = $('#portChangeType').text() === 'migrating';
+    const isChangingMigrating = $('#portChangeType').text() === '迁移中';
 
     if (isChangingMigrating) {
         changePortNumber(conflictingPortData.sourceIp, conflictingPortData.portNumber, newPortNumber, function () {
